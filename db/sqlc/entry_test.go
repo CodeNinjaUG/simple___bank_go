@@ -34,9 +34,10 @@ func TestCreateEntry(t *testing.T){
 func TestGetEntry(t *testing.T){
 	account := createRandomAccount(t)
 	entry1 := createRandomEntry(t, account)
-	entry2, err := testQueries.GetEntry(context.Background(),entry1.AccountID)
+	entry2, err := testQueries.GetEntry(context.Background(),entry1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, entry2)
+	require.Equal(t, entry1.ID, entry2.ID)
 	require.Equal(t, entry1.AccountID, entry2.AccountID)
 	require.Equal(t, entry1.Amount, entry2.Amount)
 	require.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt,time.Second)
