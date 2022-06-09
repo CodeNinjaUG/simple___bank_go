@@ -12,6 +12,7 @@ dropdb:
 
 migrateup:   
 	
+    
 	migrate -path db/migrations -database "postgresql://root:8bdc7axyzex@localhost:5432/swaggie_bank?sslmode=disable" -verbose up
 
 migratedown:  
