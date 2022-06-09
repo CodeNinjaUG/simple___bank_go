@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/hytesedition/Desktop/SimpleBank'
+docker run --name  swaggie_bank -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=8bdc7axyzex -d postgres:12-alpine 
+make: Leaving directory `/Users/hytesedition/Desktop/SimpleBank'
+ 
