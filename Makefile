@@ -10,6 +10,6 @@ migratedown:
 	migrate -path db/migrations -database "postgresql://root:8bdc7axyzex@localhost:5432/swaggie_bank?sslmode=disable" -verbose down	
 sqlc:	
 	sqlc generate
-test:
+test: 
 	go test -v -co ver ./...
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc test
