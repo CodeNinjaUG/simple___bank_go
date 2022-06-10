@@ -17,15 +17,17 @@ func NewServer(store *db.Store) *Server {
 	router := gin.Default()
 
 	//add routes to router
+	router.POST("/create/account", server.createAccount)
 	server.router = router
 	return server
 }
+
 //error reponse method for every function
 func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }
 
 //Start runs the http server on a specific address
-func(server *Server) Start(address string) error {
-  return server.router.Run(address)
+func (server *Server) Start(address string) error {
+	return server.router.Run(address)
 }
