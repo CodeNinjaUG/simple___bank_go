@@ -54,13 +54,13 @@ func (server *Server) getAccount(ctx *gin.Context) {
 }
 
 type listAccountRequest struct {
-	PageID   int32 `form:"page_id" binding:"required,min=1"`
-	PageSize int32 `form:"page_size" binding:"required,min=5, max=10"`
+	PageID   int32 `json:"page_id" binding:"required,min=1"`
+	PageSize int32 `json:"page_size" binding:"required,min=5,max=10"`
 }
 
 func (server *Server) listAccounts(ctx *gin.Context) {
 	var req listAccountRequest
-	if err := ctx.ShouldBindQuery(&req); err != nil {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
@@ -86,6 +86,10 @@ type UpdateAccountRequest struct {
 
 func (server *Server) UpdateAccount(ctx *gin.Context) {
 	var req UpdateAccountRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 	arg := db.UpdateAccountParams{
 		ID:      req.ID,
 		Balance: req.Balance,
@@ -104,10 +108,23 @@ type DeleteAccountRequest struct {
 
 func (server Server) DeleteAccount(ctx *gin.Context) {
 	var dreq DeleteAccountRequest
+	if err := ctx.ShouldBindUri(&dreq); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 	err := server.store.DeleteAccount(ctx, dreq.ID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "successfully done"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "deleted successfully"})
+	// err := server.store.DeleteAccount(ctx, dreq.ID)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	// 	return
+	// }
+	// ctx.JSON(http.StatusOK, gin.H{"message": "successfully done"})
 }
