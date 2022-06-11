@@ -86,6 +86,8 @@ type UpdateAccountRequest struct {
 
 func (server *Server) UpdateAccount(ctx *gin.Context) {
 	var req UpdateAccountRequest
+
+	//fmt.Printf("%#v\n", req.ID)
 	if err := ctx.ShouldBindUri(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -94,6 +96,7 @@ func (server *Server) UpdateAccount(ctx *gin.Context) {
 		ID:      req.ID,
 		Balance: req.Balance,
 	}
+	//ctx.JSON(http.StatusOK, arg)
 	account, err := server.store.UpdateAccount(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
