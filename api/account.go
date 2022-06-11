@@ -65,8 +65,8 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 		return
 	}
 	arg := db.GetAccountsParams{
-		Limit: req.PageSize,
-		Offset: (req.PageID -1 ) * req.PageSize,
+		Limit:  req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize,
 	}
 	accounts, err := server.store.GetAccounts(ctx, arg)
 	if err != nil {
@@ -77,4 +77,37 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, accounts)
+}
+
+type UpdateAccountRequest struct {
+	ID      int64 `uri:"id" binding:"required,min=1"`
+	Balance int64 `json:"balance" binding:"required"`
+}
+
+func (server *Server) UpdateAccount(ctx *gin.Context) {
+	var req UpdateAccountRequest
+	arg := db.UpdateAccountParams{
+		ID:      req.ID,
+		Balance: req.Balance,
+	}
+	account, err := server.store.UpdateAccount(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, account)
+}
+
+type DeleteAccountRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func (server Server) DeleteAccount(ctx *gin.Context) {
+	var dreq DeleteAccountRequest
+	err := server.store.DeleteAccount(ctx, dreq.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "successfully done"})
 }
