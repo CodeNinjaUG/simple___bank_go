@@ -8,6 +8,10 @@ migrateup:
 	migrate -path db/migrations -database "postgresql://root:8bdc7axyzex@localhost:5432/swaggie_bank?sslmode=disable" -verbose up
 migratedown:  
 	migrate -path db/migrations -database "postgresql://root:8bdc7axyzex@localhost:5432/swaggie_bank?sslmode=disable" -verbose down	
+migrateup1:   
+	migrate -path db/migrations -database "postgresql://root:8bdc7axyzex@localhost:5432/swaggie_bank?sslmode=disable" -verbose up 1
+migratedown1:  
+	migrate -path db/migrations -database "postgresql://root:8bdc7axyzex@localhost:5432/swaggie_bank?sslmode=disable" -verbose down	1
 sqlc:	
 	sqlc generate
 test: 
